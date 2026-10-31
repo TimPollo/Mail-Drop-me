@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="description" content="E-Mail-Adressen direkt aus Screenshots und Fotos erkennen und mit einem Klick kopieren." />
+  <title>MailSnap – E-Mail aus Screenshot kopieren</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a href="./" class="brand" aria-label="MailSnap – Startseite">
+        <span class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/><path d="M16 17h3"/></svg>
+        </span>
+        <span>MailSnap<span class="brand-dot">.</span></span>
+      </a>
+      <span class="privacy"><span class="privacy-dot"></span>Privat · direkt im Browser</span>
+    </header>
+
+
+    <section class="results-card" aria-labelledby="results-title">
+      <div class="card-heading">
+        <span class="step-badge step-badge-purple">@</span>
+        <div>
+          <h2 id="results-title">Erkannte E-Mail</h2>
+          <p>Immer oben sichtbar – auch beim Scrollen.</p>
+        </div>
+        <span id="resultCount" class="result-count" hidden>0 gefunden</span>
+      </div>
+      <div id="results" class="results" aria-live="polite">
+        <div id="noResult" class="no-result"><span class="no-result-glyph">@</span><span>Nach dem Einfügen erscheint die E-Mail hier oben.</span></div>
+      </div>
+      <p id="reviewHint" class="review-hint" hidden>Bitte kontrolliere die Adresse kurz – Buchstaben und Zahlen können bei unscharfen Fotos verwechselt werden. Du kannst den Text vor dem Kopieren korrigieren.</p>
+    </section>
+
+    <section class="workbench" aria-label="E-Mail aus Bild auslesen">
+      <div class="card-heading">
+        <span class="step-badge">01</span>
+        <div>
+          <h2>Bild einfügen</h2>
+          <p>Screenshot kopieren und hier einfügen – oder ein Bild auswählen.</p>
+        </div>
+      </div>
+
+      <div id="dropzone" class="dropzone" role="button" tabindex="0" aria-label="Bild auswählen oder hierher ziehen">
+        <div id="emptyState" class="empty-state">
+          <div class="upload-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m7 16 3.5-4 2.6 2.7 2.2-2 2.7 3.3"/><circle cx="8.5" cy="8.5" r="1.3"/><path d="M12 8h6"/></svg>
+          </div>
+          <strong>Bild hier ablegen</strong>
+          <span>oder tippen, um ein Foto auszuwählen</span>
+          <small>PNG, JPG, WEBP · Auch Handyfotos</small>
+        </div>
+        <div id="preview" class="preview" hidden>
+          <div class="preview-inner">
+            <img id="previewImage" alt="Vorschau des ausgewählten Bilds" draggable="false" />
+            <div id="cropLayer" class="crop-layer" aria-label="Bereich zur Texterkennung markieren">
+              <div id="cropRect" class="crop-rect" hidden></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <input id="fileInput" type="file" accept="image/*" hidden />
+
+      <div class="upload-actions">
+        <button id="pasteBtn" class="button button-primary" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="5" width="14" height="16" rx="2"/><path d="M9 5.5V3.7A1.7 1.7 0 0 1 10.7 2h3.6A1.7 1.7 0 0 1 16 3.7v1.8M9 10h8M9 14h8"/></svg>
+          Bild einfügen
+          <kbd>⌘ V</kbd>
+        </button>
+        <button id="chooseBtn" class="button button-secondary" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a3 3 0 0 1 3-3h2l2 2h6a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z"/><path d="M12 10v6m-3-3h6"/></svg>
+          Bild auswählen
+        </button>
+      </div>
+
+      <div class="ios-paste">
+        <div class="ios-paste-info"><span aria-hidden="true">📱</span><span><strong>Am iPhone:</strong> Nach dem Kopieren hier lange drücken und <strong>„Einsetzen“</strong> wählen.</span></div>
+        <div id="pasteTarget" contenteditable="true" role="textbox" aria-label="Hier das kopierte Bild einsetzen" aria-multiline="false" data-placeholder="Hier lange drücken → Einsetzen"></div>
+      </div>
+
+      <div class="tools-row">
+        <button id="cropBtn" class="mini-button" type="button" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v13a2 2 0 0 0 2 2h13M3 6h13a2 2 0 0 1 2 2v13"/></svg>
+          <span>Bereich markieren</span>
+        </button>
+        <button id="retryBtn" class="mini-button" type="button" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M4.8 16.2A8 8 0 0 0 19.1 12M4 12A8 8 0 0 1 18.2 7.5L20 12"/></svg>
+          Erneut erkennen
+        </button>
+      </div>
+      <p id="cropHelp" class="crop-help" hidden>Ziehe mit dem Finger oder der Maus einen Rahmen um die E-Mail-Adresse. Die Erkennung startet danach automatisch.</p>
+
+      <div id="progressBox" class="progress-box" role="status" aria-live="polite" hidden>
+        <div class="progress-head"><span id="progressText">Erkennung wird vorbereitet …</span><span id="progressPercent">0 %</span></div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+        <p>Die Texterkennung läuft direkt auf deinem Gerät.</p>
+      </div>
+      <p id="statusText" class="status-text" role="status" aria-live="polite">Bereit. Füge ein Bild ein, um zu starten.</p>
+    </section>
+
+
+    <footer>
+      <span>MailSnap · Ohne Account · Kostenlos</span>
+      <span>OCR mit <a href="https://github.com/naptha/tesseract.js" target="_blank" rel="noopener noreferrer">Tesseract.js</a></span>
+    </footer>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
