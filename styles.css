@@ -1,0 +1,299 @@
+:root {
+  color-scheme: light;
+  --bg: #f3f5f8;
+  --card: #ffffff;
+  --line: #d9dfe8;
+  --line-strong: #b9c3d0;
+  --text: #111827;
+  --muted: #5f6b7a;
+  --blue: #2563eb;
+  --blue-soft: #e8f0ff;
+  --green: #0f9d58;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+body { min-height: 100vh; }
+button, input, [contenteditable="true"] { font: inherit; }
+button { cursor: pointer; }
+.app-shell {
+  width: min(100% - 24px, 660px);
+  margin: 0 auto;
+  padding: max(18px, env(safe-area-inset-top)) 0 max(18px, env(safe-area-inset-bottom));
+}
+.app-header {
+  padding: 8px 4px 14px;
+}
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+.brand-overline {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+h1 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.1;
+}
+.brand-subline {
+  margin: 12px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+  font-size: 14px;
+}
+.result-panel, .action-panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+.result-panel {
+  position: sticky;
+  top: max(8px, env(safe-area-inset-top));
+  z-index: 5;
+  margin-bottom: 12px;
+}
+.action-panel { margin-bottom: 12px; }
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.panel-head-stack { align-items: flex-start; }
+.panel-head h2 {
+  margin: 0;
+  font-size: 17px;
+}
+.text-button {
+  border: none;
+  background: transparent;
+  color: var(--blue);
+  font-size: 14px;
+  padding: 4px 0;
+}
+.empty-result {
+  padding: 14px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 14px;
+  color: var(--muted);
+  font-size: 14px;
+  background: #fbfcfe;
+}
+.result-box {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 126px;
+  gap: 10px;
+}
+.email-field {
+  width: 100%;
+  min-width: 0;
+  height: 52px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  padding: 0 14px;
+  font-size: 16px;
+  color: var(--text);
+  background: #fff;
+}
+.email-field:focus, .paste-target:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+.copy-btn, .paste-btn {
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  min-height: 52px;
+}
+.copy-btn {
+  background: var(--blue);
+  color: white;
+}
+.copy-btn.copied {
+  background: var(--green);
+}
+.paste-btn {
+  width: 100%;
+  background: var(--text);
+  color: white;
+  margin-bottom: 12px;
+}
+.muted {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.hint-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.hint-item {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 10px;
+  align-items: start;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+.hint-label {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 28px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 10px;
+}
+.paste-assist {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  background: #fbfcff;
+}
+.assist-head {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.paste-target {
+  min-height: 52px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 12px;
+  padding: 13px 14px;
+  font-size: 16px;
+  color: var(--text);
+  background: white;
+  overflow: hidden;
+}
+.paste-target:empty::before {
+  content: attr(data-placeholder);
+  color: #93a0af;
+}
+.progress-box {
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  background: #fbfcfe;
+}
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.progress-track {
+  height: 8px;
+  border-radius: 999px;
+  background: #e6ebf2;
+  overflow: hidden;
+}
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background: var(--blue);
+  transition: width 0.15s ease;
+}
+.status-text {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+.status-text.success { color: var(--green); }
+.status-text.error { color: #b42318; }
+.extra-box {
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+.extra-box p {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.extra-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.extra-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+.extra-item code {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fbfcfe;
+  font-size: 14px;
+  color: var(--text);
+}
+.extra-copy {
+  border: 1px solid var(--line-strong);
+  background: white;
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  background: var(--text);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  box-shadow: var(--shadow);
+  z-index: 20;
+}
+[hidden] { display: none !important; }
+
+@media (max-width: 520px) {
+  .app-shell { width: min(100% - 16px, 660px); }
+  .brand-logo { width: 48px; height: 48px; border-radius: 14px; }
+  .brand-subline { font-size: 13px; }
+  .result-panel, .action-panel { border-radius: 16px; padding: 14px; }
+  .result-box { grid-template-columns: 1fr 108px; gap: 8px; }
+  .copy-btn, .paste-btn, .email-field, .paste-target { min-height: 50px; }
+  .hint-item { grid-template-columns: 58px 1fr; gap: 8px; font-size: 13px; }
+}

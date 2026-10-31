@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="MailSnap liest E-Mail-Adressen direkt aus eingefügten Screenshots und kopiert sie mit einem Klick." />
+  <title>MailSnap – Mail aus Foto kopieren</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div class="brand-wrap">
+        <img src="./icon-192.png" class="brand-logo" alt="MailSnap Logo" />
+        <div>
+          <p class="brand-overline">MAIL AUS FOTO</p>
+          <h1>MailSnap</h1>
+        </div>
+      </div>
+      <p class="brand-subline">Einfügen → erkennen → kopieren. Ohne Bildvorschau, ohne Zoom, bereit für das nächste Foto.</p>
+    </header>
+
+    <section class="result-panel" aria-labelledby="resultTitle">
+      <div class="panel-head">
+        <h2 id="resultTitle">Erkannte E-Mail</h2>
+        <button id="resetBtn" class="text-button" type="button">Zurücksetzen</button>
+      </div>
+
+      <div id="emptyResult" class="empty-result">
+        Noch keine E-Mail erkannt.
+      </div>
+
+      <div id="resultBox" class="result-box" hidden>
+        <input id="emailField" class="email-field" type="text" inputmode="email" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Erkannte E-Mail-Adresse" />
+        <button id="copyBtn" class="copy-btn" type="button">Kopieren</button>
+      </div>
+
+      <div id="extraBox" class="extra-box" hidden>
+        <p>Weitere Treffer</p>
+        <div id="extraList" class="extra-list"></div>
+      </div>
+    </section>
+
+    <section class="action-panel" aria-labelledby="actionTitle">
+      <div class="panel-head panel-head-stack">
+        <div>
+          <h2 id="actionTitle">Foto einsetzen</h2>
+          <p class="muted">Du kopierst einen Screenshot oder ein Foto und setzt es hier ein. Das Bild wird nicht angezeigt – nur die Mail.</p>
+        </div>
+      </div>
+
+      <button id="pasteBtn" class="paste-btn" type="button">Foto einsetzen</button>
+
+      <div class="hint-list">
+        <div class="hint-item"><span class="hint-label">iPhone</span><span>Tippe auf den Button, dann im Feld darunter <strong>lange drücken → Einsetzen</strong>.</span></div>
+        <div class="hint-item"><span class="hint-label">PC / Mac</span><span>Tippe auf den Button und drücke dann <strong>Strg + V</strong> bzw. <strong>⌘ + V</strong>.</span></div>
+      </div>
+
+      <div id="pasteAssist" class="paste-assist" aria-live="polite" hidden>
+        <div class="assist-head">Einfügebereich</div>
+        <div id="pasteTarget" class="paste-target" contenteditable="true" role="textbox" aria-label="Hier das kopierte Foto einsetzen" aria-multiline="false" data-placeholder="Hier tippen oder lange drücken und Einsetzen wählen"></div>
+      </div>
+
+      <div id="progressBox" class="progress-box" hidden>
+        <div class="progress-row">
+          <span id="progressText">Texterkennung startet …</span>
+          <span id="progressPercent">0 %</span>
+        </div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+      </div>
+
+      <p id="statusText" class="status-text">Bereit. Kopiere ein Foto und tippe auf „Foto einsetzen“.</p>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+</body>
+</html>
